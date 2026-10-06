@@ -1,0 +1,42 @@
+import sbt._
+
+object Dependencies {
+  val stringTemplate = "org.antlr" % "ST4" % "4.3.4"
+  val commonsIo      = "commons-io" % "commons-io" % "2.22.0"
+  // We excluded sshd-sftp to avoid https://github.com/advisories/GHSA-fhw8-8j55-vwgq
+  // Either that or we need to bump to jgit 6.x
+  val jgit = ("org.eclipse.jgit" % "org.eclipse.jgit" % "5.13.5.202508271544-r").excludeAll(
+    ExclusionRule("org.apache.sshd", "sshd-sftp")
+  )
+  val jgitSshApache = ("org.eclipse.jgit" % "org.eclipse.jgit.ssh.apache" % "5.13.5.202508271544-r").excludeAll(
+    ExclusionRule("org.apache.sshd", "sshd-sftp")
+  )
+  val scopt      = "com.github.scopt" %% "scopt" % "4.1.0"
+  val scalacheck = "org.scalacheck" %% "scalacheck" % "1.20.0"
+  val scalatest  = Seq(
+    "org.scalatest" %% "scalatest-flatspec" % "3.2.20" % Test,
+    "org.scalatest" %% "scalatest-funspec" % "3.2.20" % Test,
+    "org.scalatest" %% "scalatest-funsuite" % "3.2.20" % Test,
+    "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20" % Test
+  )
+  val scalamock                              = "org.scalamock" %% "scalamock" % "7.5.5"
+  val verify                                 = "com.eed3si9n.verify" %% "verify" % "1.0.0"
+  val sbtIo                                  = "org.scala-sbt" %% "io" % "1.13.3"
+  val scala212                               = "2.12.21"
+  val scala213                               = "2.13.18"
+  val scala3                                 = "3.8.4"
+  val sbt1                                   = "1.3.13"
+  val sbt2                                   = "2.0.8"
+  val scalaXml                               = "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
+  def parserCombinator(scalaVersion: String) = "org.scala-lang.modules" %% "scala-parser-combinators" % {
+    CrossVersion.partialVersion(scalaVersion) match {
+      case Some((2, _)) => "1.1.2" // Do not upgrade beyond 1.x
+      case _            => "2.2.0"
+    }
+  }
+  val slf4jsimple  = "org.slf4j" % "slf4j-simple" % "1.7.36"
+  val logback      = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  val coursier     = ("io.get-coursier" %% "coursier" % "2.1.24").cross(CrossVersion.for3Use2_13)
+  val coursierCli  = ("io.get-coursier" %% "coursier-cli" % "2.1.24").cross(CrossVersion.for3Use2_13)
+  val launcherIntf = "org.scala-sbt" % "launcher-interface" % "1.7.0"
+}

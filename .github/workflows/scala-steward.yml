@@ -1,0 +1,26 @@
+name: scala-steward
+on:
+  push:
+    branches: [ develop ]
+  schedule:
+  - cron: '0 14 * * *'
+  workflow_dispatch:
+jobs:
+  scala-steward:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: ${{ github.repository_owner == 'foundweekends' }}
+    steps:
+    - uses: sbt/setup-sbt@v1
+    - name: Generate token
+      id: generate_token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        client-id: 89697
+        private-key: ${{ secrets.FOUNDWEEKENDS_BOT_KEY }}
+    - name: Launch Scala Steward
+      uses: scala-steward-org/scala-steward-action@6162b21b93d4be314a61ce0462fd026630132fee # v2.96.0
+      with:
+        github-token: ${{ steps.generate_token.outputs.token }}
+        author-email: "74864734+foundweekends-bot[bot]@users.noreply.github.com"
+        author-name: "foundweekends-bot[bot]"
